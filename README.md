@@ -16,3 +16,13 @@ Configuration:
         Boostrap (styles)
         Reactstrap (styles)
         Axios (to fetch requests to the backend)
+
+Google Calendar API:
+    Official Google Api:
+        https://developers.google.com/calendar/api/v3/reference
+    Youtube Tutorial:
+        https://www.youtube.com/playlist?list=PL3JVwFmb_BnTO_sppfTh3VkPhfDWRY5on
+
+Utils:
+    Timezones List:
+        https://stackoverflow.com/a/59515559
