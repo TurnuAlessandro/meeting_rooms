@@ -22,7 +22,7 @@ To start the server open another terminal and step into the root of the project,
 ```sh
 cd backend 
 ```
-then activate your python virtual environment then run:
+then activate your python virtual environment `pipenv shell` then run:
 ```sh
 python manage.py runserver
 ```
