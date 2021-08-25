@@ -1,11 +1,11 @@
-import React, { Component } from "react";
-import RoomModal from "./components/RoomModal";
-import axios from 'axios';
+import React, { Component } from "react"
+import axios from 'axios'
+import { v4 as uuid } from 'uuid'
+import { ButtonGroup, Button } from "react-bootstrap"
+import Homepage from "./pages/Homepage";
+import Login from "./pages/Login";
 
-axios.defaults.xsrfHeaderName = "X-CSRFToken"
-axios.defaults.xsrfCookieName = 'csrftoken'
-
-
+/*
 class App extends Component {
   constructor(props) {
     super(props);
@@ -166,5 +166,22 @@ class App extends Component {
     );
   }
 }
+*/
+function App(){
+  let [user, setUser] = React.useState(null)
 
-export default App;
+  React.useEffect(() => {
+    axios
+        .post('http://localhost:8084/api/login', {email: 'kelly@kelly.it', password:'kelly'})
+
+      //  .then(res => console.log('risposta della login', {res}))
+        .then(res => setUser( res.data))
+
+        .catch(e => console.warn('riga 177 di App.js', e))
+
+  }, [])
+console.log({user})
+  return user ? <Homepage user={user}/> : <Login />
+}
+
+export default App

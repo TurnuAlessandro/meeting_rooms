@@ -1,0 +1,12 @@
+POST http://localhost:8084/api/user
+Content-Type: application/json
+
+{
+    "email": "a@a.a",
+    "password": "sdfg",
+    "name": "Alessandro"
+}
+
+
+GET http://localhost:8084/api/user
+
