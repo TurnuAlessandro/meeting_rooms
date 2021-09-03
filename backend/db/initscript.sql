@@ -4,7 +4,6 @@ DROP SCHEMA project CASCADE;
 
 CREATE SCHEMA project;
 	
-	
 create table project.users(
 	user_id serial primary key,
 	user_email varchar(250) unique not null,

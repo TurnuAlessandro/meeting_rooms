@@ -5,6 +5,8 @@ const app = express()
 
 const index = require('./routes/index')
 const userRoute = require('./routes/user.routes')
+const calendarRoute = require('./routes/calendar.routes')
+const awsRoute = require('./routes/aws.routes')
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
@@ -14,5 +16,7 @@ app.use(cors())
 app.use(index)
 app.use('/auth/', userRoute)
 
+app.use('/calendar/', calendarRoute)
+app.use('/aws/', awsRoute)
 
 module.exports = app
