@@ -12,7 +12,7 @@ app.use(express.json({ type: 'application/vnd.api+json' }))
 app.use(cors())
 
 app.use(index)
-app.use('/api/', userRoute)
+app.use('/auth/', userRoute)
 
 
 module.exports = app

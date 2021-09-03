@@ -1,0 +1,17 @@
+label{
+    font-weight: bold;
+}
+
+label.mandatory:after{
+    content: '*';
+    font-weight: normal;
+    margin-left: 5px;
+}
+
+input {
+    border-radius: 0px !important;
+}
+
+.error-message{
+    font-size: .8em;
+}

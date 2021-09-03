@@ -1,187 +1,94 @@
-import React, { Component } from "react"
+import React, { useEffect, useState }  from "react"
 import axios from 'axios'
-import { v4 as uuid } from 'uuid'
-import { ButtonGroup, Button } from "react-bootstrap"
-import Homepage from "./pages/Homepage";
-import Login from "./pages/Login";
+import Homepage from "./pages/Homepage"
 
-/*
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      viewOccupied: false,
-      modal: false,
-      roomList: [],
-      activeItem: {
-        name: "",
-        description: "",
-        occupied: false,
-      },
-    };
-  }
-
-  componentDidMount(){
-    this.refreshList();
-  }
-
-  refreshList = () => {
-    axios
-      .get("/api/rooms/")
-      .then((res) => this.setState({ roomList: res.data }))
-      .catch((err) => console.log(err));
-  };
-
-  toggle = () => {
-    this.setState({ modal: !this.state.modal });
-  };
-
-  handleSubmit = (item) => {
-    this.toggle();
-
-    if (item.id) {
-      axios
-        .put(`/api/rooms/${item.id}/`, item)
-        .then((res) => this.refreshList());
-      return;
-    }
-    axios
-      .post("/api/rooms/", item)
-      .then((res) => this.refreshList());
-  };
-
-  handleDelete = (item) => {
-    axios
-    .delete(`/api/rooms/${item.id}/`)
-    .then((res) => this.refreshList());
-  };
-
-  createItem = () => {
-    const item = { name: "", description: "", occupied: false };
-
-    this.setState({ activeItem: item, modal: !this.state.modal });
-  };
-
-  editItem = (item) => {
-    this.setState({ activeItem: item, modal: !this.state.modal });
-  };
-
-  displayOccupied = (status) => {
-    if (status) {
-      return this.setState({ viewOccupied: true });
-    }
-
-    return this.setState({ viewOccupied: false });
-  };
-
-  renderTabList = () => {
-    return (
-      this.state.roomList.length > 0 ? 
-      <div className="nav nav-tabs">
-        <span
-          className={this.state.viewOccupied ? "nav-link active" : "nav-link"}
-          onClick={() => this.displayOccupied(true)}
-        >
-          Occupied
-        </span>
-        <span
-          className={this.state.viewOccupied ? "nav-link" : "nav-link active"}
-          onClick={() => this.displayOccupied(false)}
-        >
-          Not occupied
-        </span>
-      </div>
-      : 
-      <p>There are no rooms, add one</p>
-    );
-  };
-
-  renderItems = () => {
-    const { viewOccupied } = this.state;
-    const newItems = this.state.roomList.filter(
-      (item) => item.occupied == viewOccupied
-    );
-
-    return newItems.map((item) => (
-      <li
-        key={item.id}
-        className="list-group-item d-flex justify-content-between align-items-center"
-      >
-        <span
-          className={`todo-title mr-2 ${
-            this.state.viewOccupied ? "completed-todo" : ""
-          }`}
-          title={item.description}
-        >
-          {item.name}
-        </span>
-        <span>
-          <button
-            className="btn btn-secondary mr-2"
-            onClick={() => this.editItem(item)}
-          >
-            Edit
-          </button>
-          <button
-            className="btn btn-danger"
-            onClick={() => this.handleDelete(item)}
-          >
-            Delete
-          </button>
-        </span>
-      </li>
-    ));
-  };
-
-  render() {
-    return (
-      <main className="container">
-        <h1 className="text-black text-uppercase text-center my-4">Meeting Rooms</h1>
-        <div className="row">
-          <div className="col-md-6 col-sm-10 mx-auto p-0">
-            <div className="card p-3">
-              <div className="mb-4">
-                <button
-                  className="btn btn-primary"
-                  onClick={this.createItem}
-                >
-                  Add Room
-                </button>
-              </div>
-              {this.renderTabList()}
-              <ul className="list-group list-group-flush border-top-0">
-                {this.renderItems()}
-              </ul>
-            </div>
-          </div>
-        </div>
-        {this.state.modal ? (
-          <RoomModal
-            activeItem={this.state.activeItem}
-            toggle={this.toggle}
-            onSave={this.handleSubmit}
-          />
-        ) : null}
-      </main>
-    );
-  }
-}
-*/
 function App(){
-  let [user, setUser] = React.useState(null)
+    let [user, setUser] = useState(null)
 
-  React.useEffect(() => {
-    axios
-        .post('http://localhost:8084/api/login', {email: 'kelly@kelly.it', password:'kelly'})
+    /** Viene invocata SOLO la prima volta che App viene renderizzata e serve a recuperare l'utente dalla sessione, se loggato */
+    useEffect(() => {
+        let loggedUser = null
+        if(JSON.parse(sessionStorage.getItem('logged'))){
+            loggedUser = JSON.parse(sessionStorage.getItem('user'))
+        }
+        if(loggedUser){
+            setUser(loggedUser)
+            sessionStorage.setItem('user', JSON.stringify(loggedUser))
+        }
+    }, [])
 
-      //  .then(res => console.log('risposta della login', {res}))
-        .then(res => setUser( res.data))
+    /** Effettua la chiamata al backend per effettuare la login
+     * @param email    -> l'email dell'utente che vuole logggarsi
+     * @param password -> la password dell'utente che vuole logggarsi
+     * @return null se la login NON ha avuto successo, l'oggetto javascript dell'utente altrimenti*/
+    function login(email, password){
+        return axios
+            .post('/auth/login', {email, password})
+            .then(res => {
+                setUser(res.data)
+                sessionStorage.setItem('user', JSON.stringify(res.data))
+                return res.data
+            })
+            .catch(e => {
+                setUser(null)
+                sessionStorage.setItem('user', JSON.stringify(null))
+                return null
+            })
+    }
 
-        .catch(e => console.warn('riga 177 di App.js', e))
+    /** Effettua la chiamata al backend per effettuare la registrazione di un nuovo utente
+     * @param name     -> il nome dell'utente che vuole registrarsi
+     * @param email    -> l'email dell'utente che vuole registrarsi
+     * @param password -> la password dell'utente che vuole registrarsi
+     * @return (void) -> l'unico motivo per il quale una registrazione non va a buon fine è la presenza di una stessa mail, ma il controllo lo fa ANCHE il frontend*/
+    function signup(name, email, password){
 
-  }, [])
-console.log({user})
-  return user ? <Homepage user={user}/> : <Login />
+
+        axios
+            .post('/auth/signup', {name, email, password})
+            .then(res => {
+                console.log(res.data.text)
+                setUser(res.data.user)
+            })
+            .catch(e => setUser(null))
+    }
+
+    /** Controlla che la mail passata come parametro non appartenga già ad un altro utente
+     * @param email -> l'email da controllare
+     * @return boolean : true se l'email esiste già, false altrimenti (res.data sarà true o false)
+     */
+    function emailAlreadyExists(email){
+        return axios.post('/auth/exists', {email})
+            .then(res => res.data)
+            .catch(err => console.warn(err))
+    }
+
+    /** Effettua il logout sia nel frontend che nel backend
+     * @return void
+     */
+    function logout(){
+        console.log('LOGOUT')
+
+        sessionStorage.setItem('logged', JSON.stringify(false))
+        sessionStorage.setItem('user', JSON.stringify(null))
+        setUser(null)
+
+        // BACKEND
+        axios.post('/auth/logout')
+    }
+
+
+
+
+    return (
+        <Homepage
+            user={user}
+            login={login}
+            signup={signup}
+            emailAlreadyExists={emailAlreadyExists}
+            logout={logout}
+        />
+    )
 }
 
 export default App
