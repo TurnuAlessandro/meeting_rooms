@@ -3,114 +3,70 @@ const calendarController = require('../controllers/calendar.controller')
 
 const fs = require('fs')
 const readline = require('readline')
-const { google } = require('googleapis')
+const {google} = require('googleapis')
 
-const SCOPES = ['https://www.googleapis.com/auth/calendar']
-const API_NAME = 'meeting-rooms'
-const API_VERSION = 'v3'
-const CLIENT_SECRET_FILE_PATH = 'google_calendar_secrets/client_secret_file.json'
+// If modifying these scopes, delete token.json.
+const SCOPES = [
+    'https://www.googleapis.com/auth/calendar',
+    'https://www.googleapis.com/auth/calendar.events',
+]
+
 const TOKEN_PATH = 'token.json'
-/*
-fs.readFile(CLIENT_SECRET_FILE_PATH, (err, content) => {
-    console.log('EEEE')
-    console.log('EEEE')
 
-    if(err)
-        return console.warn('Error loading file:', err)
 
-    console.log({content, parsed_content: JSON.parse(content)})
+function getAuth(){
+    const secret = JSON.parse(process.env.GOOGLE_CALENDAR_SECRET)
+    const {client_secret, client_id, redirect_uris} = secret.installed
 
-    authorize(JSON.parse(content), listEvents)
-})*/
-
-/**
- * Create an OAuth2 client with the given credentials, and then execute the
- * given callback function.
- * @param {Object} credentials The authorization client credentials.
- * @param {function} callback The callback to call with the authorized client.
- *//*
-function authorize(credentials, callback) {
-    const {client_secret, client_id, redirect_uris} = credentials.web;
     const oAuth2Client = new google.auth.OAuth2(
-        client_id, client_secret, redirect_uris[0]);
+        client_id, client_secret, redirect_uris[0])
 
     // Check if we have previously stored a token.
+// Check if we have previously stored a token.
     fs.readFile(TOKEN_PATH, (err, token) => {
-        console.log('QUI', err, token)
-        if (err) return getAccessToken(oAuth2Client, callback);
-        oAuth2Client.setCredentials(JSON.parse(token));
-        callback(oAuth2Client);
-    });
-}*/
-
-/**
- * Get and store new token after prompting for user authorization, and then
- * execute the given callback with the authorized OAuth2 client.
- * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
- * @param {getEventsCallback} callback The callback for the authorized client.
- *//*
-function getAccessToken(oAuth2Client, callback) {
-    const authUrl = oAuth2Client.generateAuthUrl({
-        access_type: 'offline',
-        scope: SCOPES,
-    });
-    console.log('Authorize this app by visiting this url:', authUrl);
-    const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout,
-    });
-    rl.question('Enter the code from that page here: ', (code) => {
-        rl.close();
-        oAuth2Client.getToken(code, (err, token) => {
-            if (err) return console.error('Error retrieving access token', err);
-            oAuth2Client.setCredentials(token);
-            // Store the token to disk for later program executions
-            fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
-                if (err) return console.error(err);
-                console.log('Token stored to', TOKEN_PATH);
-            });
-            callback(oAuth2Client);
-        });
-    });
-}
-*/
-/**
- * Lists the next 10 events on the user's primary calendar.
- * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
- *//*
-function listEvents(auth) {
-    const calendar = google.calendar({version: 'v3', auth});
-    calendar.events.list({
-        calendarId: 'primary',
-        timeMin: (new Date()).toISOString(),
-        maxResults: 10,
-        singleEvents: true,
-        orderBy: 'startTime',
-    }, (err, res) => {
-        if (err) return console.log('The API returned an error: ' + err);
-        const events = res.data.items;
-        if (events.length) {
-            console.log('Upcoming 10 events:');
-            events.map((event, i) => {
-                const start = event.start.dateTime || event.start.date;
-                console.log(`${start} - ${event.summary}`);
-            });
+        if (!err){
+            oAuth2Client.setCredentials(JSON.parse(token));
         } else {
-            console.log('No upcoming events found.');
+            const authUrl = oAuth2Client.generateAuthUrl({
+                access_type: 'offline',
+                scope: SCOPES,
+            })
+            console.log('Authorize this app by visiting this url:', authUrl);
+            const rl = readline.createInterface({
+                input: process.stdin,
+                output: process.stdout,
+            })
+            rl.question('Enter the code from that page here: ', (code) => {
+                rl.close();
+                oAuth2Client.getToken(code, (err, token) => {
+                    if (err)
+                        return console.error('Error retrieving access token', err)
+
+                    oAuth2Client.setCredentials(token);
+                    fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
+                        if (err) return console.error(err);
+                        console.log('Token stored to', TOKEN_PATH);
+                    })
+                })
+            })
         }
     });
-}*/
+    return oAuth2Client
+}
+const auth = getAuth()
+const service = google.calendar({version: 'v3', auth})
 
 
 
 
 
-router.get('/event/:id', calendarController.getEvent)
-router.get('/event', calendarController.getEvent)
-
-
-router.post('/event', calendarController.newEvent)
-router.put('/logout', calendarController.updateEvent)
-router.delete('/logout', calendarController.deleteEvent)
-
+// service.calendarList.list({}, (err, res) => {
+//     if (err) return console.log('The API returned an error: ' + err)
+//     console.log(res.data.items)
+// })
+router.get('/', (req, res) => calendarController.getCalendars(req, res, auth))
+router.get('/events', (req, res) => calendarController.getEvents(req, res, auth))
+//router.get('/:calendarName/event/:name', (req, res) => calendarController.getEvent(req, res, auth))
+router.post('/event', (req, res) => calendarController.newEvent(req, res, auth))
+router.post('/newCalendar', (req, res) => calendarController.newCalendar(req, res, auth))
 module.exports = router

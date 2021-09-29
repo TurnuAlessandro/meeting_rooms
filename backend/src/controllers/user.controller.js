@@ -61,18 +61,13 @@ async function getAllUsers (req, res){
 
   const { rows } = await db.query("SELECT * FROM project.users", [])
   console.log({rows})
-  res.status(201).send({
-    message: "User added successfully!",
-    body: {
-      users: [...rows]
+  res.status(201).send([...rows]
           .filter(({user_role}) => user_role !== 'ADMIN')
           .map(({user_name, user_email, user_role}) => ({
             email: user_email,
             role: user_role,
             name: user_name
-          }))
-    },
-  })
+          })))
 }
 
 async function login (req, res){

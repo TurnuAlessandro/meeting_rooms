@@ -11,7 +11,7 @@ export default function NavigationBar(props){
     } = props
 
     return (
-        <Navbar collapseOnSelect expand="sm" bg="dark" variant="dark" fixed='top'>
+        <Navbar collapseOnSelect expand="sm" bg="dark" variant="dark" fixed='topppp'>
             <Container>
                 <Navbar.Brand href="#home">Meeting Rooms</Navbar.Brand>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />

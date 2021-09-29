@@ -18,7 +18,6 @@ export default function MessageModal({timer, message, success, show, beforeEleme
             const timeout = setTimeout(() => {
                                 onHide()
                             }, timer)
-
             return () => clearTimeout(timeout)
         }
     }, [show, timer, onHide])
@@ -31,7 +30,6 @@ export default function MessageModal({timer, message, success, show, beforeEleme
             aria-labelledby="contained-modal-title-vcenter"
             centered
         >
-
             <Modal.Body className='d-flex flex-column justify-content-center align-content-center align-items-center'>
                 {beforeElement}
                 <div className='my-3'>

@@ -15,8 +15,7 @@ app.use(cors())
 
 app.use(index)
 app.use('/auth/', userRoute)
-
 app.use('/calendar/', calendarRoute)
-app.use('/aws/', awsRoute)
+app.use('/mqtt/', awsRoute)
 
 module.exports = app
