@@ -1,7 +1,7 @@
 #include <pgmspace.h>
 
 const char ssid[] = "*******";
-const char password[] = "********";
+const char password[] = "*********";
 
 #define THINGNAME "button"
 

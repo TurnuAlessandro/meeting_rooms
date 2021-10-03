@@ -81,7 +81,8 @@ void printLCDsecondLine( int timeM){
   if(timeM != -1){
       lcd.print(timeM);
       lcd.setCursor(2,1);
-      lcd.print(":00");
+      lcd.print(":00/" + String(timeM+1) + ":00");
+  
 
     }
 }
@@ -98,7 +99,7 @@ void loop() {
     String msg = (String)value1;
     pubSubClient.publish(MQTT_PUB_TOPIC, msg.c_str());
     lastPublish = millis();
-  
+
     time_t now = time(nullptr);
     struct tm * timeinfo = localtime(&now);
 
@@ -184,8 +185,7 @@ void msgReceived(char* topic, byte* payload, unsigned int length) {
      - altrimenti è verde 
    - altrimenti niente 
    */
-  
-
+     
   
 //Controllo Stringhe della data    
   if(timeX < meetingTimeGlobale || meetingTimeGlobale == "-1"){
