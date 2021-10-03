@@ -1,7 +1,7 @@
 import {Col, Container, Row, Modal} from "react-bootstrap"
 import { Formik, Form as FormikForm } from "formik"
 import * as Yup from 'yup'
-import TextField from "../authentication/TextField";
+import TextField from "../../components/authentication/TextField";
 import '../../css/form.css'
 import '../../css/modal.css'
 import axios from "axios";
@@ -84,8 +84,6 @@ export default function ConfiguraSala(){
                                                 className='btn btn-success mx-1 float-end mt-3'
                                                 style={{borderRadius: 0}}
                                                 type='submit'>Aggiungi Sala</button>
-
-                                        BOOO DA FINIRE, NON VA NODE. NON RIESCO A CREARE IL CALEDNARIO NUOVO
                                     </fieldset>
                                 </FormikForm>
                             )

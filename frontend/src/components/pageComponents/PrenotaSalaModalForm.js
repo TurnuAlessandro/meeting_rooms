@@ -1,10 +1,11 @@
 import {Form, Modal} from "react-bootstrap"
 import { Formik, Form as FormikForm, Field } from "formik"
 import * as Yup from 'yup'
-import '../css/form.css'
-import '../css/modal.css'
-import TextField from "./authentication/TextField";
-import TextAreaField from "./forms/TextAreaField";
+import '../../css/form.css'
+import '../../css/modal.css'
+import TextField from "../authentication/TextField";
+import TextAreaField from "../forms/TextAreaField";
+import {EVENT_STATE} from "../../utils/event_state";
 
 export default function PrenotaSalaModalForm({slot, onSubmit, onSuccess, ...props}){
     const defaultInitialValues = {
@@ -45,6 +46,7 @@ export default function PrenotaSalaModalForm({slot, onSubmit, onSuccess, ...prop
                 initialValues={defaultInitialValues}
                 validationSchema={validator}
                 onSubmit={values => {
+                    values = {...values, stato: EVENT_STATE.DA_APPROVARE}
                     onSubmit({...values, ...slot})
                 }}>
                 {() => {

@@ -4,14 +4,17 @@ import SignUp from "../components/authentication/SignUp"
 import Login from "../components/authentication/Login"
 import MessageModal from "../components/authentication/MessageModal"
 import NavigationBar from "../components/pageComponents/NavigationBar"
-import SubNavigationBar from "../components/pageComponents/SubNavigationBar"
-import ConfiguraSala from "../components/pageComponents/ConfiguraSala"
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
-import GestionePrenotazioni from "../components/pageComponents/GestionePrenotazioni"
-import GestioneSale from "../components/pageComponents/GestioneSale"
-import VediCalendario from "../components/pageComponents/VediCalendario"
-import GestioneUtenti from "../components/pageComponents/GestioneUtenti"
+import SubNavigationBar from "../components/pageComponents/admin/SubNavigationBar"
+import ConfiguraSala from "./admin/ConfiguraSala"
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom"
+import GestionePrenotazioni from "./admin/GestionePrenotazioni"
+import GestioneSale from "./admin/GestioneSale"
+import VediCalendarioAdmin from "./admin/VediCalendarioAdmin"
+import GestioneUtenti from "./admin/GestioneUtenti"
 import axios from "axios"
+import LoginSignupAsker from "./LoginSignupAsker";
+import VediCalendarioUser from "./admin/VediCalendarioUser";
+
 
 export default function Homepage({user, login, signup, logout, emailAlreadyExists}){
     const [isSignUpOpen, setIsSignUpOpen] = useState(false)
@@ -20,25 +23,12 @@ export default function Homepage({user, login, signup, logout, emailAlreadyExist
 
     //onMount
     useEffect(() => {
-            // axios.post('/mqtt/', {
-            //     sala: 'Sala '+Math.floor(Math.random()*100),
-            //     meetingName: 'DAI AMO STAMPATI',
-            //     meetingTime: '2021092118'
-            // })
         // setInterval(() => {
         //     axios.get('/mqtt/').then(r => (console.log(r)))
         //         console.log('AA')
         // }, 1000)
     }, [])
 
-    let content = <div>Page Unavailable</div>
-    switch(content){
-        case 'CONFIGURA_SALA':
-            content = <ConfiguraSala />
-            break
-        default:
-            console.warn('Pagina Inesistente')
-    }
     return (
         <>
 
@@ -49,8 +39,6 @@ export default function Homepage({user, login, signup, logout, emailAlreadyExist
                         onLoginButtonClick={() => setIsLoginModalOpen(true)}
                         onSignUpButtonClick={() => setIsSignUpOpen(true)}
                         onLogoutButtonClick={logout}
-                        onViewUsersButtonClick={() => 'TODO' /* TODO */}
-                        onManageReservationButtonClick={() => 'TODO' /* TODO */}
                     />
                     {user && user.role === 'ADMIN' &&
                     <SubNavigationBar
@@ -58,14 +46,22 @@ export default function Homepage({user, login, signup, logout, emailAlreadyExist
                         onLoginButtonClick={() => setIsLoginModalOpen(true)}
                         onSignUpButtonClick={() => setIsSignUpOpen(true)}
                         onLogoutButtonClick={logout}
-                        onViewUsersButtonClick={() => 'TODO' /* TODO */}
-                        onManageReservationButtonClick={() => 'TODO' /* TODO */}
                     />}
                 </div>
                 <div style={{paddingTop: 100}}>
                     <Switch>
                         <Route exact path="/">
-                            <div>Pagina unavailable</div>
+                            { user ?
+                                user.role === 'ADMIN' ?
+                                <Redirect to={'/a/vedi_calendario.html'} /> :
+                                <Redirect to={'/u/vedi_calendario.html'} />
+                                :
+                                <LoginSignupAsker
+                                    onLogin={() => setIsLoginModalOpen(true)}
+                                    onSignUp={() => setIsSignUpOpen(true)}
+                                />
+                                }
+
                         </Route>
                         <Route path="/a/configurazione_sala.html">
                             <ConfiguraSala />
@@ -77,10 +73,31 @@ export default function Homepage({user, login, signup, logout, emailAlreadyExist
                             <GestioneSale />
                         </Route>
                         <Route path="/a/gestione_prenotazione.html">
-                            <GestionePrenotazioni />
+                            <GestionePrenotazioni user={user} />
                         </Route>
                         <Route path="/a/vedi_calendario.html">
-                            <VediCalendario user={user}/>
+                            {
+                                user ?
+                                    user.role === 'ADMIN' ?
+                                        <VediCalendarioAdmin user={user}/>
+                                        :
+                                        <VediCalendarioUser user={user} />
+                                    :
+                                    <div>Accesso negato: non sei autorizzato</div>
+
+                            }
+                        </Route>
+                        <Route path="/u/vedi_calendario.html">
+                            {
+                                user ?
+                                    user.role === 'ADMIN' ?
+                                        <VediCalendarioAdmin user={user}/>
+                                        :
+                                        <VediCalendarioUser user={user} />
+                                    :
+                                    <div>Accesso negato: non sei autorizzato</div>
+
+                            }
                         </Route>
                     </Switch>
                 </div>

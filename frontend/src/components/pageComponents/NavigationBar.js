@@ -1,13 +1,11 @@
-import {Container, Dropdown, Nav, Navbar} from "react-bootstrap";
+import {Container, Dropdown, Nav, Navbar} from "react-bootstrap"
 
 export default function NavigationBar(props){
     const {
         user,
         onLoginButtonClick,
         onSignUpButtonClick,
-        onLogoutButtonClick,
-        onViewUsersButtonClick,
-        onManageReservationButtonClick,
+        onLogoutButtonClick
     } = props
 
     return (
@@ -17,7 +15,6 @@ export default function NavigationBar(props){
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto"/>
-
                     <Nav>
                         <Nav.Link disabled className='text-white'>
                             {user ?

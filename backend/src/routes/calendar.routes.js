@@ -66,6 +66,10 @@ const service = google.calendar({version: 'v3', auth})
 // })
 router.get('/', (req, res) => calendarController.getCalendars(req, res, auth))
 router.get('/events', (req, res) => calendarController.getEvents(req, res, auth))
+
+router.put('/event', (req, res) => calendarController.updateEvent(req, res, auth))
+
+
 //router.get('/:calendarName/event/:name', (req, res) => calendarController.getEvent(req, res, auth))
 router.post('/event', (req, res) => calendarController.newEvent(req, res, auth))
 router.post('/newCalendar', (req, res) => calendarController.newCalendar(req, res, auth))

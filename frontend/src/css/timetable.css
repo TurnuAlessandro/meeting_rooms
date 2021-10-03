@@ -1,22 +1,45 @@
 .meetingrooms-timetable-slot {
     overflow: hidden;
-    background-color: rgb(177,177,177);
+    background-color: rgb(205, 205, 205);
     z-index: 1;
     padding: 15px 1px;
     border: 0.1px solid white;
     border-radius: 4px;
 }
 
-.meetingrooms-timetable-slot.occupied {
-    background-color: rgb(55,123,26);
-
-}
-.meetingrooms-timetable-slot:hover {
+.meetingrooms-timetable-slot.admin.IN_CANCELLAZIONE,
+.meetingrooms-timetable-slot.admin.DA_APPROVARE,
+.meetingrooms-timetable-slot.admin.CONFERMATO {
     transform: scale(1);
     cursor: pointer;
-    z-index: 600;
-    font-size: .7em;
+    font-size: 1em;
     overflow: visible;
+}
+
+
+.meetingrooms-timetable-slot.admin.IN_CANCELLAZIONE,
+.meetingrooms-timetable-slot.admin.DA_APPROVARE{
+    border: 10px solid black;
+}
+.meetingrooms-timetable-slot.admin.CONFERMATO {
+    border: 1px solid yellow;
+}
+
+.meetingrooms-timetable-slot.admin.IN_CANCELLAZIONE:hover,
+.meetingrooms-timetable-slot.admin.DA_APPROVARE:hover,
+.meetingrooms-timetable-slot.admin.CONFERMATO:hover{
+    transform: scale(1.2);
+    z-index: 600;
+
+}
+
+.meetingrooms-timetable-slot.admin.C:hover,
+.meetingrooms-timetable-slot.admin.DA_APPROVARE:hover{
+    transform: scale(1.2);
+}
+
+.meetingrooms-timetable-slot.occupied {
+    background-color: rgb(55,123,26);
 }
 
 .meetingrooms-timetable-slot.prenotabile:hover {
@@ -31,31 +54,22 @@
     content: 'Prenota ora';
 }
 
-.meetingrooms-timetable-slot.occupied:hover {
-    transform: scale(1.3);
-    border: 1px solid white;
-}
-.meetingrooms-timetable-slot.occupied:hover:before {
+.meetingrooms-timetable-slot.occupied.CONFERMATO:hover:before {
     position: absolute;
     content: '+info';
     padding: 2px 5px;
     width: fit-content;
     text-decoration: none;
-    left: 60px;
+    left: 55px;
     bottom: -10px;
     z-index: 1001;
     background-color: white;
     border-radius: 5px;
     border-bottom: 2px solid green;
     color: black;
+    font-size: .8em;
 }
 
 .meetingrooms-timetable-slot.occupied:hover::before {
     border-color: black;
-}
-
-#calendar-container .overflow-auto{}
-
-#calendar-container .overflow-auto::-webkit-scrollbar{
-
 }

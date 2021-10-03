@@ -1,0 +1,29 @@
+.CONFERMATO{
+    background-color: rgb(31, 122, 0) !important ;
+    color: white !important ;
+}
+.DA_APPROVARE{
+    background-color: rgb(62, 183, 59) !important ;
+    color: black !important ;
+}
+.IN_CANCELLAZIONE{
+    background-color: rgb(36,252,32) !important ;
+    color: black !important ;
+}
+.SCADUTO{
+    background-color: rgb(40,2,2) !important ;
+    color: white !important ;
+}
+.CANCELLATO{
+    background-color: rgb(80,86,80) !important ;
+    color: white !important ;
+}
+.REVOCATO{
+    background-color: rgb(130,130,130) !important ;
+    color: white !important ;
+}
+
+.OCCUPATO{
+    background-color: rgb(231, 8, 8) !important ;
+    color: white !important ;
+}

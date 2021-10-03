@@ -22,7 +22,7 @@ function App(){
      * @param password -> la password dell'utente che vuole logggarsi
      * @return null se la login NON ha avuto successo, l'oggetto javascript dell'utente altrimenti*/
     function login(email, password){
-        return axios
+        const res = axios
             .post('/auth/login', {email, password})
             .then(res => {
                 setUser(res.data)
@@ -34,6 +34,7 @@ function App(){
                 sessionStorage.setItem('user', JSON.stringify(null))
                 return null
             })
+        return res
     }
 
     /** Effettua la chiamata al backend per effettuare la registrazione di un nuovo utente
@@ -42,8 +43,6 @@ function App(){
      * @param password -> la password dell'utente che vuole registrarsi
      * @return (void) -> l'unico motivo per il quale una registrazione non va a buon fine è la presenza di una stessa mail, ma il controllo lo fa ANCHE il frontend*/
     function signup(name, email, password){
-
-
         axios
             .post('/auth/signup', {name, email, password})
             .then(res => {
@@ -75,10 +74,9 @@ function App(){
 
         // BACKEND
         axios.post('/auth/logout')
+
+        window.location.href = '/'
     }
-
-
-
 
     return (
         <Homepage

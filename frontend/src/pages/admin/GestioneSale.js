@@ -1,7 +1,7 @@
 import {Button, Col, Container, Row} from "react-bootstrap"
 import {useEffect, useState} from "react";
 import axios from "axios";
-import {AddressIcon, ChairIcon} from "../icons/Icons";
+import {AddressIcon, ChairIcon} from "../../components/icons/Icons";
 
 export default function GestioneSale(){
     const [roomsInfo, setRoomsInfo] = useState([])

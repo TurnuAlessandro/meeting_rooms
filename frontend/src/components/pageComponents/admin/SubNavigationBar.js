@@ -1,6 +1,6 @@
 import {Button, Container, Dropdown, Nav, Navbar} from "react-bootstrap"
 import * as Icon from 'react-bootstrap-icons'
-import {ConferenceIcon} from "../icons/Icons";
+import {ConferenceIcon} from "../../icons/Icons";
 import {Link} from "react-router-dom";
 
 export default function SubNavigationBar(props){

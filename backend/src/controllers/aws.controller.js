@@ -55,14 +55,6 @@ async function read(req, res){
 
         res.status(200).json(JSON.parse(payload))
         return null
-        /*
-
-                const { value } = parseInt(payload)
-                console.log('message', topic, value)
-
-                // 0 spento
-                // 1 acceso
-                res.status(200).send(value > 0 ? 1 : 0)*/
     }
 
     device.once('message', callback)

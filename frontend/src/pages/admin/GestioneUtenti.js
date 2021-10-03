@@ -85,7 +85,7 @@ export default function GestioneUtenti(){
                                 <tbody>
                                 {userFiltered.map((user, index) => (
                                     <tr key={uuidv4()}>
-                                        <td scope='row' className='text-center'>{index+1}</td>
+                                        <td className='text-center'>{index+1}</td>
                                         <td>{user.name}</td>
                                         <td>{user.email}</td>
                                         <td>

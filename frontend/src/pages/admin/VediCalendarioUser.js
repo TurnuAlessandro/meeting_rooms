@@ -4,9 +4,30 @@ import '../../css/timetable.css'
 import {useEffect, useState} from "react"
 import moment from 'moment'
 import axios from "axios"
-import Calendario from "./Calendario"
+import Select from 'react-select'
+import makeAnimated from 'react-select/animated'
+import {EVENT_STATE, EVENT_STATE_LABELS} from "../../utils/event_state";
+import '../../css/event_state.css'
+import CalendarioGestionePrenotazioni from "./CalendarioAdmin";
+import CalendarioAdmin from "./CalendarioAdmin";
+import CalendarioUser from "./CalendarioUser";
+const animatedComponents = makeAnimated()
 
-export default function VediCalendario({user}){
+const getOption = key =>
+    ({
+        label:
+            <div
+                className={`p-1 px-3 m-0 rounded-1 w-auto ${key}`}>
+                {EVENT_STATE_LABELS[key] ? EVENT_STATE_LABELS[key].user : key}
+            </div>,
+        value: EVENT_STATE[key] || key
+    })
+
+const stateOptions = [...Object.keys(EVENT_STATE), 'OCCUPATO']
+                        .map(getOption)
+                        // .filter(o => o.value !== EVENT_STATE.DA_APPROVARE)
+
+export default function VediCalendarioUser({user}){
     const [weekData, setWeekData] = useState({
         year: 2000,
         weekNumber: 1
@@ -15,6 +36,7 @@ export default function VediCalendario({user}){
         list: [],
         currentIndex: 0
     })
+    const [eventFilter, updateEventFilter] = useState(stateOptions.map(option => option.value))
 
     // onMount
     useEffect(() => {
@@ -39,8 +61,27 @@ export default function VediCalendario({user}){
         setWeekData({weekNumber, year})
     }
 
+    console.log(eventFilter)
     return (
         <>
+            <Container fluid>
+                <Row>
+                    <Col xs={1}/>
+                    <Col xs={10} className='mt-3 text-center border border-success border-2 p-2 rounded-2'>
+                        <h5>Filtra in base allo stato dell'evento</h5>
+                        <Select
+                            closeMenuOnSelect={false}
+                            components={animatedComponents}
+                            defaultValue={stateOptions}
+                            onChange={(e) => {
+                                updateEventFilter(e.map(option => option.value))
+                            }}
+                            isMulti
+                            options={stateOptions} />
+                    </Col>
+                    <Col xs={1}/>
+                </Row>
+            </Container>
             <Container fluid>
                 <Row>
                     <Col xs={1} />
@@ -131,8 +172,9 @@ export default function VediCalendario({user}){
                                 </Col>
                             </Row>
                         </Container>
-                        <Calendario
+                        <CalendarioUser
                             user={user}
+                            filter={eventFilter}
                             currentSala={roomsInfo.list[roomsInfo.currentIndex]}
                             year={weekData.year}
                             weekNumber={weekData.weekNumber} />
