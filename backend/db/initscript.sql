@@ -1,7 +1,3 @@
--- SCHEMA: project
-
-DROP SCHEMA project CASCADE;
-
 CREATE SCHEMA project;
 	
 create table project.users(
@@ -19,6 +15,5 @@ insert into project.users (user_email, user_password, user_name, user_role)
 insert into project.users (user_email, user_password, user_name, user_role)
 					values('josh@josh.it', 'josh', 'Josh H.', 'USER');
 
-select * from project.users;
 
 
